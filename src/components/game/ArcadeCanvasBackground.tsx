@@ -43,6 +43,7 @@ export const ArcadeCanvasBackground: React.FC<ArcadeCanvasBackgroundProps> = ({
       >
         <source src={`${assetBaseUrl}cosmic-blackhole.mp4`} type="video/mp4" />
         <source src="./cosmic-blackhole.mp4" type="video/mp4" />
+        <source src="/Hack2Skill2/cosmic-blackhole.mp4" type="video/mp4" />
         <source src="/SpendIntruders/cosmic-blackhole.mp4" type="video/mp4" />
         <source
           src={`${assetBaseUrl}Cosmic_black_hole_swirling_plasma_3f27cc88.mp4`}
