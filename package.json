@@ -1,10 +1,31 @@
 {
-  "name": "spendswipe",
+  "name": "spendintruders",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "description": "AI-Powered Gamified Financial Command Engine for Slashing Vampire Subscriptions & Dark-Pattern Auto-Debits",
+  "author": "Vaibhav Saini",
+  "license": "MIT",
+  "homepage": "https://vaibhavs2007.github.io/SpendIntruders/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/VaibhavS2007/SpendIntruders.git"
+  },
+  "keywords": [
+    "fintech",
+    "gamification",
+    "subscriptions",
+    "groq",
+    "gemini",
+    "ai-agent",
+    "space-invaders",
+    "dark-patterns",
+    "rbi-emandate"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit",
     "build": "tsc && vite build",
     "start": "node server.js",
     "test": "vitest run",
@@ -15,6 +36,7 @@
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "clsx": "^2.1.1",
+    "compression": "^1.8.2",
     "express": "^5.3.0",
     "framer-motion": "^14.9.0",
     "lucide-react": "^1.16.0",
@@ -24,6 +46,7 @@
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.9.0",
+    "@types/compression": "^1.7.5",
     "@types/node": "^26.6.6",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",

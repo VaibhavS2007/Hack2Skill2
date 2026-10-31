@@ -1,12 +1,17 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import { LandingHero } from './components/game/LandingHero';
 import { ArcadeHUD } from './components/game/ArcadeHUD';
 import { ArcadeShooter } from './components/game/ArcadeShooter';
-import { VictoryScorecard } from './components/game/VictoryScorecard';
-import { SubscriptionForge } from './components/game/SubscriptionForge';
 import { ArcadeCanvasBackground } from './components/game/ArcadeCanvasBackground';
 import { CombatVfxOverlay, CombatTextEvent } from './components/game/CombatVfxOverlay';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
+
+const SubscriptionForge = lazy(() =>
+  import('./components/game/SubscriptionForge').then((m) => ({ default: m.SubscriptionForge }))
+);
+const VictoryScorecard = lazy(() =>
+  import('./components/game/VictoryScorecard').then((m) => ({ default: m.VictoryScorecard }))
+);
 import { DEMO_STATEMENT } from './data/demoStatement';
 import { Transaction, SwipedTransaction, SwipeDecision, GameStats } from './core/engine/types';
 import { calculateScoreForDecision, calculateGameStats } from './core/engine/savingsCalculator';
@@ -353,10 +358,19 @@ export function App() {
         )}
 
         {gameState === 'forge' && (
-          <SubscriptionForge
-            onLaunchBattle={handleLaunchBattleFromForge}
-            onBackToHome={() => setGameState('landing')}
-          />
+          <Suspense
+            fallback={
+              <div className="w-full min-h-[50vh] flex flex-col items-center justify-center gap-4 text-cyan-400 font-arcade" role="status" aria-live="polite">
+                <div className="w-12 h-12 border-4 border-cyan-500/20 border-t-cyan-400 rounded-full animate-spin shadow-[0_0_20px_#00F0FF]" />
+                <p className="text-xs tracking-widest uppercase animate-pulse">WARPING DOCKYARD SUB-MODULES...</p>
+              </div>
+            }
+          >
+            <SubscriptionForge
+              onLaunchBattle={handleLaunchBattleFromForge}
+              onBackToHome={() => setGameState('landing')}
+            />
+          </Suspense>
         )}
 
         {gameState === 'playing' && deck[currentIndex] && (
@@ -386,13 +400,22 @@ export function App() {
         )}
 
         {gameState === 'finished' && finalStats && (
-          <VictoryScorecard
-            stats={finalStats}
-            swipedTransactions={swipedTransactions}
-            onPlayAgain={handleStartDemo}
-            groqApiKey={groqApiKey}
-            onUpdateApiKey={handleUpdateGroqApiKey}
-          />
+          <Suspense
+            fallback={
+              <div className="w-full min-h-[50vh] flex flex-col items-center justify-center gap-4 text-emerald-400 font-arcade" role="status" aria-live="polite">
+                <div className="w-12 h-12 border-4 border-emerald-500/20 border-t-emerald-400 rounded-full animate-spin shadow-[0_0_20px_#00FF88]" />
+                <p className="text-xs tracking-widest uppercase animate-pulse">COMPILING AUDIT METRICS & AI TELEMETRY...</p>
+              </div>
+            }
+          >
+            <VictoryScorecard
+              stats={finalStats}
+              swipedTransactions={swipedTransactions}
+              onPlayAgain={handleStartDemo}
+              groqApiKey={groqApiKey}
+              onUpdateApiKey={handleUpdateGroqApiKey}
+            />
+          </Suspense>
         )}
       </main>
 

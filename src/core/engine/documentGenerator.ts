@@ -1,8 +1,18 @@
+/**
+ * @fileoverview Legal notice and dispute letter generation engine.
+ * Generates automated cancellation notices compliant with FTC Click-to-Cancel, California Auto-Renewal Law,
+ * and RBI E-Mandate circulars, plus Fair Credit Billing Act (FCBA 15 U.S.C. § 1666) bank dispute drafts.
+ * @module core/engine/documentGenerator
+ */
+
 import { Transaction, CancellationDraft, DisputeDraft } from './types';
 import { calculateAnnualCost } from './savingsCalculator';
 
 /**
  * Generates an FTC & CCPA compliant subscription cancellation notice.
+ *
+ * @param tx - Terminated subscription transaction
+ * @returns Cancellation notice draft containing subject, pre-filled legal text, and portal links
  */
 export function generateCancellationEmail(tx: Transaction): CancellationDraft {
   const annual = calculateAnnualCost(tx.amount, tx.frequency);
@@ -20,8 +30,8 @@ Please accept this formal written notice to immediately CANCEL and TERMINATE my 
 - Recurring Amount: ₹${tx.amount.toFixed(2)} (${tx.frequency})
 - Identified Billing Date: ${tx.date}
 
-In accordance with the Federal Trade Commission's (FTC) "Click-to-Cancel" rule and applicable state automatic renewal laws (including California Business and Professions Code § 17600 et seq.), I request that:
-1. All recurring billing authorizations on my credit card or bank account be terminated immediately.
+In accordance with the Federal Trade Commission's (FTC) "Click-to-Cancel" rule and applicable state automatic renewal laws (including California Business and Professions Code § 17600 et seq.) and Reserve Bank of India (RBI) circular RBI/2020-21/74 on Processing of E-Mandates for Recurring Transactions, I request that:
+1. All recurring billing authorizations on my credit card, bank account, or UPI AutoPay be terminated immediately.
 2. Written confirmation of this cancellation and effective end date be sent to my email address within 3 business days.
 3. No further renewal charges or penalties be levied against my payment methods.
 
@@ -49,6 +59,9 @@ Sincerely,
 
 /**
  * Generates a formal Fair Credit Billing Act (FCBA) transaction dispute / chargeback letter.
+ *
+ * @param tx - Flagged duplicate or rogue transaction
+ * @returns Formal dispute notice letter ready for submission to bank cardholder service
  */
 export function generateDisputeLetter(tx: Transaction): DisputeDraft {
   const isDuplicate = tx.anomalyType === 'duplicate';

@@ -41,6 +41,8 @@ export const ArcadeHUD: React.FC<ArcadeHUDProps> = ({
         {/* 1UP & Timer */}
         <div className="flex items-center gap-3">
           <div
+            role="timer"
+            aria-live="polite"
             className={`px-3 py-2 rounded-xl flex items-center justify-center font-arcade text-xs transition-all ${
               isTimeCritical
                 ? 'bg-arcade-neonRed/20 text-arcade-neonRed border-2 border-arcade-neonRed animate-pulse shadow-[0_0_15px_#FF3366]'
@@ -58,12 +60,17 @@ export const ArcadeHUD: React.FC<ArcadeHUDProps> = ({
         </div>
 
         {/* Live Recovered Cash Display */}
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center" role="region" aria-label="Recovered Cash Counter">
           <div className="flex items-center gap-1 font-arcade text-[9px] text-slate-400 tracking-widest uppercase">
             <RupeeCashTokenIcon className="w-3.5 h-3.5" />
             <span>RECOVERED CASH</span>
           </div>
-          <div className="flex items-center gap-1 font-cyber font-black text-2xl sm:text-3xl text-arcade-neonGreen drop-shadow-[0_0_12px_rgba(0,255,136,0.6)]">
+          <div
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+            className="flex items-center gap-1 font-cyber font-black text-2xl sm:text-3xl text-arcade-neonGreen drop-shadow-[0_0_12px_rgba(0,255,136,0.6)]"
+          >
             <span className="text-xl -mr-0.5">₹</span>
             <span>{annualSavings.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             <span className="text-[10px] font-mono text-emerald-400">/YR</span>
@@ -74,6 +81,8 @@ export const ArcadeHUD: React.FC<ArcadeHUDProps> = ({
         <div className="flex items-center gap-2">
           {/* Flame Multiplier */}
           <div
+            role="status"
+            aria-live="polite"
             className={`px-3 py-1.5 rounded-xl font-arcade text-[10px] font-bold flex items-center gap-1.5 transition-all ${
               multiplier >= 3
                 ? 'bg-arcade-neonYellow/20 text-arcade-neonYellow border-2 border-arcade-neonYellow shadow-[0_0_15px_#FFE600] animate-bounce-slight'
@@ -88,7 +97,7 @@ export const ArcadeHUD: React.FC<ArcadeHUDProps> = ({
           </div>
 
           {/* Arcade Score */}
-          <div className="text-right hidden md:block pl-2">
+          <div className="text-right hidden md:block pl-2" role="status" aria-live="polite">
             <div className="font-arcade text-[8px] text-slate-400 uppercase">SCORE</div>
             <div className="font-cyber text-sm font-extrabold text-white tracking-widest">
               {score.toLocaleString()}
@@ -98,7 +107,7 @@ export const ArcadeHUD: React.FC<ArcadeHUDProps> = ({
           {/* Synthwave BGM Toggle */}
           <button
             onClick={onToggleBgm}
-            className={`p-2 rounded-xl border transition-all ${
+            className={`p-2 rounded-xl border transition-all focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none ${
               isBgmActive
                 ? 'bg-arcade-neonPink/20 border-arcade-neonPink text-arcade-neonPink shadow-[0_0_10px_#FF007F]'
                 : 'bg-slate-900 border-slate-700 text-slate-500 hover:text-slate-300'
@@ -112,7 +121,7 @@ export const ArcadeHUD: React.FC<ArcadeHUDProps> = ({
           {/* SFX Mute Toggle */}
           <button
             onClick={onToggleMute}
-            className="p-2 rounded-xl bg-slate-900 border border-slate-700 hover:bg-slate-800 text-slate-300 hover:text-white transition-colors"
+            className="p-2 rounded-xl bg-slate-900 border border-slate-700 hover:bg-slate-800 text-slate-300 hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none"
             title={isMuted ? 'Unmute SFX' : 'Mute SFX'}
             aria-label={isMuted ? 'Unmute Audio' : 'Mute Audio'}
           >
@@ -122,7 +131,7 @@ export const ArcadeHUD: React.FC<ArcadeHUDProps> = ({
           {/* Finish Button */}
           <button
             onClick={onEndGame}
-            className="p-2 rounded-xl bg-slate-900 border border-slate-700 hover:bg-slate-800 text-slate-400 hover:text-arcade-neonYellow transition-colors font-arcade text-[8px] hidden lg:flex items-center gap-1"
+            className="p-2 rounded-xl bg-slate-900 border border-slate-700 hover:bg-slate-800 text-slate-400 hover:text-arcade-neonYellow transition-colors font-arcade text-[8px] hidden lg:flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none"
             title="Finish audit and review deliverables now"
           >
             <FastForward className="w-3.5 h-3.5" />

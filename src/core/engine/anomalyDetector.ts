@@ -1,8 +1,22 @@
+/**
+ * @fileoverview Financial anomaly detection engine.
+ * Identifies duplicate charges, zombie subscriptions, hidden price creeps, and uncancelled trials.
+ * @module core/engine/anomalyDetector
+ */
+
 import { Transaction, AnomalyType } from './types';
 
 /**
- * Detects duplicate transactions within a statement.
- * Flags transactions that have matching merchant names and identical amounts within 7 days.
+ * Detects duplicate billing transactions within a statement.
+ * Flags transactions that share matching merchant names and identical amounts within a 7-day window.
+ *
+ * @param transactions - List of parsed financial transactions
+ * @returns Set of transaction IDs identified as duplicate billing charges
+ *
+ * @example
+ * ```ts
+ * const dupes = detectDuplicates(statementRows);
+ * ```
  */
 export function detectDuplicates(transactions: Transaction[]): Set<string> {
   const duplicateIds = new Set<string>();
@@ -36,7 +50,10 @@ export function detectDuplicates(transactions: Transaction[]): Set<string> {
 }
 
 /**
- * Categorizes transaction into an anomaly type based on patterns.
+ * Categorizes a transaction into an anomaly type based on heuristics, merchant taxonomy, and pattern recognition.
+ *
+ * @param tx - Transaction payload lacking anomaly classification
+ * @returns Object containing the identified anomaly type, UI danger badge, and AI roast string
  */
 export function classifyAnomaly(tx: Omit<Transaction, 'anomalyType' | 'roast'>): {
   anomalyType: AnomalyType;
@@ -63,8 +80,17 @@ export function classifyAnomaly(tx: Omit<Transaction, 'anomalyType' | 'roast'>):
     };
   }
 
-  // 3. OTT Streaming Subscriptions
-  if (norm.includes('hotstar') || norm.includes('sonyliv') || norm.includes('zee5') || norm.includes('netflix') || norm.includes('prime video')) {
+  // 3. Streaming Overload
+  if (
+    norm.includes('netflix') ||
+    norm.includes('prime') ||
+    norm.includes('disney') ||
+    norm.includes('hotstar') ||
+    norm.includes('hulu') ||
+    norm.includes('hbo') ||
+    norm.includes('sony') ||
+    norm.includes('zee')
+  ) {
     return {
       anomalyType: 'zombie_sub',
       anomalyBadge: 'Dormant OTT Sub 📺',
@@ -82,11 +108,26 @@ export function classifyAnomaly(tx: Omit<Transaction, 'anomalyType' | 'roast'>):
   }
 
   // 5. Unread Reading / App Subscriptions
-  if (norm.includes('kindle') || norm.includes('audible') || norm.includes('duolingo') || norm.includes('calm') || norm.includes('truecaller')) {
+  if (
+    norm.includes('kindle') ||
+    norm.includes('audible') ||
+    norm.includes('duolingo') ||
+    norm.includes('calm') ||
+    norm.includes('truecaller')
+  ) {
     return {
       anomalyType: 'zombie_sub',
       anomalyBadge: 'Guilt App Auto-Pay 📱',
       roast: 'Monthly auto-debit active on your card, but the app hasn’t been opened in 120+ days.',
+    };
+  }
+
+  // 6. Generic Recurring
+  if (tx.isRecurring) {
+    return {
+      anomalyType: 'zombie_sub',
+      anomalyBadge: 'Silent Auto-Debit 💸',
+      roast: 'Recurring auto-debit silently ticking away on autopilot. When did you last actually log in?',
     };
   }
 
@@ -98,6 +139,9 @@ export function classifyAnomaly(tx: Omit<Transaction, 'anomalyType' | 'roast'>):
 
 /**
  * Enrich raw transactions with detected duplicates and anomalies.
+ *
+ * @param transactions - Raw transaction list
+ * @returns Enriched transactions with anomaly classifications
  */
 export function enrichTransactions(transactions: Transaction[]): Transaction[] {
   const duplicates = detectDuplicates(transactions);

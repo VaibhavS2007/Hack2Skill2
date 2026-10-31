@@ -1,7 +1,16 @@
+/**
+ * @fileoverview Financial calculations and gamified arcade score engine.
+ * @module core/engine/savingsCalculator
+ */
+
 import { SwipedTransaction, GameStats, BillingFrequency } from './types';
 
 /**
  * Normalizes an expense amount into its annual cost.
+ *
+ * @param amount - Numerical transaction amount
+ * @param frequency - Billing frequency schedule
+ * @returns Annualized amount in base currency
  */
 export function calculateAnnualCost(amount: number, frequency: BillingFrequency): number {
   switch (frequency) {
@@ -19,6 +28,10 @@ export function calculateAnnualCost(amount: number, frequency: BillingFrequency)
 
 /**
  * Normalizes an expense amount into its monthly cost.
+ *
+ * @param amount - Numerical transaction amount
+ * @param frequency - Billing frequency schedule
+ * @returns Equivalent monthly cost in base currency
  */
 export function calculateMonthlyCost(amount: number, frequency: BillingFrequency): number {
   switch (frequency) {
@@ -41,6 +54,9 @@ export function calculateMonthlyCost(amount: number, frequency: BillingFrequency
  * 3 - 5: 2x
  * 6 - 9: 3x
  * 10+: 5x (MAX COMBO)
+ *
+ * @param streak - Consecutive non-idle combat actions
+ * @returns Multiplier factor (1, 2, 3, or 5)
  */
 export function getMultiplier(streak: number): number {
   if (streak >= 10) return 5;
@@ -52,6 +68,10 @@ export function getMultiplier(streak: number): number {
 /**
  * Computes arcade points for a single decision.
  * Faster decisions under 2.5s award speed bonus.
+ *
+ * @param durationMs - Time elapsed from card presentation to user decision
+ * @param currentStreak - Active combo streak prior to decision
+ * @returns Object containing awarded points, updated streak, and multiplier factor
  */
 export function calculateScoreForDecision(
   durationMs: number,
@@ -70,6 +90,12 @@ export function calculateScoreForDecision(
 
 /**
  * Aggregates all game statistics and financial savings from swiped transactions.
+ *
+ * @param swipedTransactions - Array of transactions processed during the arcade run
+ * @param timeRemainingSec - Seconds left on clock at termination
+ * @param highestStreak - Peak combo streak reached during play
+ * @param accumulatedScore - Total score accumulated by the player
+ * @returns Complete calculated scorecard metrics
  */
 export function calculateGameStats(
   swipedTransactions: SwipedTransaction[],

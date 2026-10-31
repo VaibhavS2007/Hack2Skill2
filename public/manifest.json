@@ -1,0 +1,17 @@
+{
+  "name": "SpendIntruders - Retro Arcade Subscription Slasher",
+  "short_name": "SpendIntruders",
+  "description": "Gamified financial command engine to detect vampire subscriptions, auto-debit glitches, and slash wasteful spending with AI agents.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#050814",
+  "theme_color": "#00F0FF",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -3,16 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="SpendIntruders – The Zombie Subscription & Expense Slasher. Turn painful statement auditing into a fast-paced retro arcade game." />
-    <meta name="theme-color" content="#0B0E14" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="description" content="SpendIntruders – AI-Powered Gamified Financial Command Engine. Slash zombie subscriptions and auto-debit glitches with 60FPS retro arcade gameplay and dual AI agents." />
+    <meta name="theme-color" content="#030712" />
+    <link rel="manifest" href="manifest.json" />
     <title>SpendIntruders ⚡ Zombie Subscription &amp; Expense Space Shooter</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&family=Press+Start+2P&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Resource Hints & Preconnect for Peak Core Web Vitals -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://generativelanguage.googleapis.com" />
+    <link rel="dns-prefetch" href="https://api.groq.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&family=Press+Start+2P&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet" />
   </head>
   <body class="bg-arcade-bg text-slate-100 min-h-screen selection:bg-arcade-neonPink selection:text-white font-sans antialiased overflow-x-hidden">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Register High-Efficiency Service Worker for Offline PWA Support
+      if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(() => {
+            // Graceful fallback for restricted origins
+          });
+        });
+      }
+    </script>
   </body>
 </html>

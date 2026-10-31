@@ -1,10 +1,24 @@
+/**
+ * @fileoverview Bank statement CSV parsing and sanitized financial export processor.
+ * Includes OWASP Formula Injection protection to prevent spreadsheet macro exploits.
+ * @module core/engine/csvProcessor
+ */
+
 import { Transaction, TaxDeductionRow } from './types';
 import { enrichTransactions, classifyAnomaly } from './anomalyDetector';
 
 /**
  * OWASP Formula Injection Sanitizer:
- * Protects against CSV / Spreadsheet formula execution (=, +, -, @, \t, \r).
- * Prepend with a single quote (') if the field starts with risky formula triggers.
+ * Protects against CSV and Spreadsheet formula execution attacks (`=`, `+`, `-`, `@`, `\t`, `\r`).
+ * Prepends a single quote (`'`) to neutralize executable formula triggers in Excel and Google Sheets.
+ *
+ * @param val - Unknown cell input value
+ * @returns Escaped, safely quoted CSV field string
+ *
+ * @example
+ * ```ts
+ * sanitizeForCsv("=cmd|' /C calc'!A0"); // returns "'=cmd|' /C calc'!A0"
+ * ```
  */
 export function sanitizeForCsv(val: unknown): string {
   if (val === null || val === undefined) return '""';
@@ -23,14 +37,32 @@ export function sanitizeForCsv(val: unknown): string {
 
 /**
  * Maps a merchant or category into a standard IRS Schedule C expense category.
+ *
+ * @param category - Raw statement transaction category
+ * @param merchant - Merchant/payee entity name
+ * @returns Mapped IRS Schedule C line item string
  */
 export function mapToScheduleCCategory(category: string, merchant: string): string {
   const norm = `${category} ${merchant}`.toLowerCase();
 
-  if (norm.includes('cloud') || norm.includes('aws') || norm.includes('github') || norm.includes('software') || norm.includes('figma') || norm.includes('ai') || norm.includes('openai')) {
+  if (
+    norm.includes('cloud') ||
+    norm.includes('aws') ||
+    norm.includes('github') ||
+    norm.includes('software') ||
+    norm.includes('figma') ||
+    norm.includes('ai') ||
+    norm.includes('openai')
+  ) {
     return 'Part II Line 18: Office Expense & Software';
   }
-  if (norm.includes('internet') || norm.includes('phone') || norm.includes('verizon') || norm.includes('at&t')) {
+  if (
+    norm.includes('internet') ||
+    norm.includes('phone') ||
+    norm.includes('verizon') ||
+    norm.includes('at&t') ||
+    norm.includes('jio')
+  ) {
     return 'Part II Line 25: Utilities & Telecommunications';
   }
   if (norm.includes('travel') || norm.includes('airline') || norm.includes('hotel') || norm.includes('uber')) {
@@ -47,7 +79,11 @@ export function mapToScheduleCCategory(category: string, merchant: string): stri
 }
 
 /**
- * Parses raw CSV lines into normalized Transaction objects.
+ * Parses raw CSV statement lines into structured, normalized Transaction objects.
+ * Automatically handles debits, negative values, currency symbols, and headers.
+ *
+ * @param csvText - Raw UTF-8 CSV statement text content
+ * @returns Array of enriched, anomaly-classified Transaction entities
  */
 export function parseBankCsv(csvText: string): Transaction[] {
   const lines = csvText.split(/\r?\n/).filter((l) => l.trim().length > 0);
@@ -64,7 +100,7 @@ export function parseBankCsv(csvText: string): Transaction[] {
 
   for (let i = 1; i < lines.length; i++) {
     const rawLine = lines[i];
-    // Simple CSV row parser handling quotes
+    // CSV row parser handling quotes
     const cells: string[] = [];
     let current = '';
     let inQuotes = false;
@@ -120,7 +156,10 @@ export function parseBankCsv(csvText: string): Transaction[] {
 }
 
 /**
- * Builds a sanitized, download-ready CSV for tax deductions.
+ * Generates an OWASP-sanitized, download-ready CSV for tax-deductible expenses.
+ *
+ * @param transactions - List of transactions tagged with TAX decision
+ * @returns RFC-4180 compliant CSV string ready for spreadsheet import
  */
 export function buildTaxDeductionsCsv(transactions: Transaction[]): string {
   const headers = [
@@ -138,7 +177,7 @@ export function buildTaxDeductionsCsv(transactions: Transaction[]): string {
     amount: `₹${t.amount.toFixed(2)}`,
     scheduleCCategory: mapToScheduleCCategory(t.category, t.merchant),
     businessPurpose: `Ordinary and necessary business operational expense (${t.category})`,
-    notes: 'Verified via SpendSwipe Arcade Audit',
+    notes: 'Verified via SpendIntruders Arcade Audit',
   }));
 
   const csvRows = [
