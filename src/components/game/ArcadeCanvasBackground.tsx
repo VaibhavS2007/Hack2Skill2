@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 
 interface ArcadeCanvasBackgroundProps {
   screenShake: boolean;
@@ -7,7 +7,23 @@ interface ArcadeCanvasBackgroundProps {
 export const ArcadeCanvasBackground: React.FC<ArcadeCanvasBackgroundProps> = ({
   screenShake,
 }) => {
-  const assetBaseUrl = import.meta.env.BASE_URL;
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const base = import.meta.env.BASE_URL || '/';
+  const assetBaseUrl = base.endsWith('/') ? base : `${base}/`;
+
+  // Explicitly ensure video plays and handles autoplay policy
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Fallback if browser requires interaction
+        });
+      }
+    }
+  }, []);
 
   return (
     <div
@@ -17,13 +33,17 @@ export const ArcadeCanvasBackground: React.FC<ArcadeCanvasBackgroundProps> = ({
     >
       {/* 1. Google Flow Cosmic Black Hole Video Background */}
       <video
+        ref={videoRef}
         autoPlay
         loop
         muted
         playsInline
+        preload="auto"
         className="absolute inset-0 w-full h-full object-cover scale-105"
       >
         <source src={`${assetBaseUrl}cosmic-blackhole.mp4`} type="video/mp4" />
+        <source src="./cosmic-blackhole.mp4" type="video/mp4" />
+        <source src="/SpendIntruders/cosmic-blackhole.mp4" type="video/mp4" />
         <source
           src={`${assetBaseUrl}Cosmic_black_hole_swirling_plasma_3f27cc88.mp4`}
           type="video/mp4"

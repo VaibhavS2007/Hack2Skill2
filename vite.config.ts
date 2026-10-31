@@ -4,8 +4,8 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
-  // Relative base allows seamless execution on GitHub Pages (/SpendIntruders/) as well as local/Docker/Cloud Run
-  base: './',
+  // GitHub Pages serves this repository at /SpendIntruders/
+  base: '/SpendIntruders/',
   plugins: [react()],
   resolve: {
     alias: {
