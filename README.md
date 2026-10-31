@@ -3,7 +3,7 @@
 > **Turn painful digital chores into a fast-paced 60-FPS retro space shooter where blasting enemy SaaS motherships, tractor-beaming dev tools, and escorting legitimate expenses executes real-world cancellations, chargeback disputes, and tax ledgers in under 60 seconds.**
 
 [![CI Quality Gate](https://github.com/VaibhavS2007/SpendIntruders/actions/workflows/ci.yml/badge.svg)](https://github.com/VaibhavS2007/SpendIntruders/actions/workflows/ci.yml)
-[![Pages Deployment](https://github.com/VaibhavS2007/SpendIntruders/actions/workflows/static.yml/badge.svg)](https://vaibhavs2007.github.io/SpendIntruders/)
+[![Pages Deployment](https://github.com/VaibhavS2007/SpendIntruders/actions/workflows/deploy-pages.yml/badge.svg)](https://vaibhavs2007.github.io/SpendIntruders/)
 [![Vitest Unit Tests](https://img.shields.io/badge/Vitest-32%20Passed%20(100%25)-00FF88?style=for-the-badge&logo=vitest&logoColor=black)](src/core/engine/__tests__/engine.test.ts)
 [![Playwright E2E](https://img.shields.io/badge/Playwright-24%20Passed%20(100%25)-00E5FF?style=for-the-badge&logo=playwright&logoColor=black)](scripts/verify-features.mjs)
 [![TypeScript Strict](https://img.shields.io/badge/TypeScript-Strict%20Type%20Safety-FFE600?style=for-the-badge&logo=typescript&logoColor=black)](tsconfig.json)
