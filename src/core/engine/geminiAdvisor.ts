@@ -22,7 +22,7 @@ export interface GeminiReviewResult {
  */
 export async function getGeminiSpendingReview(
   stats: GameStats,
-  swipedTransactions: SwipedTransaction[],
+  _swipedTransactions: SwipedTransaction[],
   customApiKey?: string
 ): Promise<GeminiReviewResult> {
   const apiKey =

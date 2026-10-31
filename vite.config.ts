@@ -4,6 +4,8 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
+  // GitHub Pages serves this repository below /SpendIntruders/.
+  base: '/SpendIntruders/',
   plugins: [react()],
   resolve: {
     alias: {
